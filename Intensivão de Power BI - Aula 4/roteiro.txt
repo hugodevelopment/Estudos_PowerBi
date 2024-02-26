@@ -1,0 +1,43 @@
+Para fazermos esse dashboard é precisa antes criar novas colunas para realizarmos os cálculos necessários.
+
+Questão 1 - Quantidade de transições do tipo pix
+
+Para fazer isso podemos utilizar a seguinte formula:
+
+Transações Pix = calculate(
+countrows('movimentações'),
+'Movimentações'[Forma Pagamento] = "Pix"
+)
+
+
+
+Transações = calculate(
+countrows('movimentações')
+)
+
+Questão 2 - Receita Total
+
+Para conhecermos a receita total temos que calcular o quanto recebemos e o valor total dos recebimentos. Para isso fazemos:
+
+Aqui calculammos o valor total das movimentações do tipo recebimento
+
+Receita = Calculate(
+Sum('Movimentações'[Valor da Movimentação]),
+'Movimentações'[Tipo] = "Recebimento"
+)
+
+Despesa será analogo, porém com o tipo "Pagamento"
+
+Despesa = -Calculate(
+Sum('Movimentações'[Valor da Movimentação]),
+'Movimentações'[Tipo] = "Pagamento"
+)
+
+Com a coluna receita já calculada podemos calcular outras colunas como impostos e Lucro e Margem
+
+Impostos = [Receita]*0.15
+Lucro = [Receita]-[Despesas]-'Movimentações'[Imposto]
+Margem = [Lucro]/[Receita]
+
+
+
