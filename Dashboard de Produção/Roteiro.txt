@@ -1,0 +1,31 @@
+**Analisando as medidas utilizadas**
+
+Temos algumas bem simples e diretas, como a quantidade produzida e total de horas. Nesses casos podemos realizar uma soma simples para termos o valor total da coluna. 
+
+Qtd Produzida = SUM('BaseProdução'[QtdProduzida])
+
+A quantidade teorica seria a quantidade total produzida caso não houvesse ocorrências na produção
+
+Qtd Teorica = SUM('BaseProdução'[Pecas Teoricas])
+
+A quantidade rejeita é quantidade de peças que foi rejeitada na produção por algum defeito
+
+Qtd Rejeitada = SUM('BaseProdução'[Qtd Rejeitada])
+
+Total Horas = SUM('BaseProdução'[Total Horas]) 
+
+Agora temos algumas medidas mais personalizadas. Para isso podemos utilizar a função calculate, onde podemos personalizar nossas formulas.
+
+Horas produtivas calcula o total de horas produtivas considerando que não houve nenhuma ocorrência.
+
+Horas Produtivas = CALCULATE([Total Horas], 'BaseProdução'[Ocorrencia]=BLANK())
+
+Horas Paradas = CALCULATE([Total Horas], 'BaseProdução'[Ocorrencia]<>BLANK()) ou [Total de Horas] – [Horas Produtivas]
+
+Disponibilidade = DIVIDE([Horas Produtivas], [Horas Produtivas] + [Horas Paradas], BLANK())
+
+Produtividade = DIVIDE([Qtd Produzida], [Qtd Teorica])
+
+Qualidade = DIVIDE([Qtd Produzida], [Qtd Produzida] + [Qtd Rejeitada])
+
+OEE = [Disponibilidade] * [Produtividade] * [Qualidade]
