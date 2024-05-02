@@ -4,11 +4,11 @@ Temos algumas bem simples e diretas, como a quantidade produzida e total de hora
 
 Qtd Produzida = SUM('BaseProdução'[QtdProduzida])
 
-A quantidade teorica seria a quantidade total produzida caso não houvesse ocorrências na produção
+- A quantidade teorica seria a quantidade total produzida caso não houvesse ocorrências na produção
 
 Qtd Teorica = SUM('BaseProdução'[Pecas Teoricas])
 
-A quantidade rejeita é quantidade de peças que foi rejeitada na produção por algum defeito
+- A quantidade rejeita é quantidade de peças que foi rejeitada na produção por algum defeito
 
 Qtd Rejeitada = SUM('BaseProdução'[Qtd Rejeitada])
 
@@ -16,15 +16,25 @@ Total Horas = SUM('BaseProdução'[Total Horas])
 
 Agora temos algumas medidas mais personalizadas. Para isso podemos utilizar a função calculate, onde podemos personalizar nossas formulas.
 
-Horas produtivas calcula o total de horas produtivas considerando que não houve nenhuma ocorrência.
+- Horas produtivas calcula o total de horas produtivas considerando que não houve nenhuma ocorrência.
 
 Horas Produtivas = CALCULATE([Total Horas], 'BaseProdução'[Ocorrencia]=BLANK())
 
+-Já as horas paradas é o racicionio contrário, é o total de horas em que houveram ocorrencias ou interrupções na produção
+
 Horas Paradas = CALCULATE([Total Horas], 'BaseProdução'[Ocorrencia]<>BLANK()) ou [Total de Horas] – [Horas Produtivas]
+
+- A “Disponibilidade” é calculada dividindo as “Horas Produtivas” (o tempo durante o qual o sistema está efetivamente produzindo) pela soma das “Horas Produtivas” e “Horas Paradas” (o tempo total planejado para produção). Se o denominador for zero (ou seja, se não houver horas produtivas nem horas paradas), a função DIVIDE retorna BLANK().
+
+Portanto, a “Disponibilidade” é uma medida da eficiência operacional. Um valor de disponibilidade próximo a 1 (ou 100%) indica que o sistema está quase sempre produzindo quando deveria estar, enquanto um valor próximo a 0 indica muitas paradas ou inatividades. 
 
 Disponibilidade = DIVIDE([Horas Produtivas], [Horas Produtivas] + [Horas Paradas], BLANK())
 
+- Produtividade: Esta fórmula está calculando a produtividade como a razão entre a quantidade produzida e a quantidade teórica (ou seja, a quantidade que seria produzida em condições ideais). Um valor de produtividade próximo a 1 (ou 100%) indica que a produção está atingindo seu potencial teórico, enquanto um valor abaixo de 1 indica que a produção está abaixo do potencial teórico.
+
 Produtividade = DIVIDE([Qtd Produzida], [Qtd Teorica])
+
+- Qualidade: Esta fórmula está calculando a qualidade como a razão entre a quantidade produzida e o total esperado da produção (ou seja, a soma da quantidade produzida e da quantidade rejeitada). Um valor de qualidade próximo a 1 (ou 100%) indica que a maior parte da produção é de produtos de qualidade, enquanto um valor abaixo de 1 indica que uma parte significativa da produção foi rejeitada.
 
 Qualidade = DIVIDE([Qtd Produzida], [Qtd Produzida] + [Qtd Rejeitada])
 
